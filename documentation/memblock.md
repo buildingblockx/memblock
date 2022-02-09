@@ -42,3 +42,16 @@
 使用`memblock allocator`时，首先需要在系统启动前期中，调用`memblock_init()`，并且在此函数里面调用`memblock_add()`填充所有可用内存到`memblock allocator`，进行统一管理。这也是唯一需要用户手动写的源码，完成后，就可以使用`memblock_alloc()`/`memblock_free()`进行申请/释放内存。
 
 使用时记得加上头文件：`#include <memory/allocator/memblock.h>`
+
+## 功能
+
+* 已完成功能：
+
+1. 添加/移除`可用`内存区域
+2. 从`可用`内存区域中分配/释放内存
+3. 打印所有`可用`内存区域
+
+* 未完成功能：
+
+1. 系统中的`可用`/`预留`内存区域是静态数组（128个），无法动态扩展此数组
+
