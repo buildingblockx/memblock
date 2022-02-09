@@ -27,6 +27,14 @@ struct memblock {
 	struct memblock_type reserved; /* reserved memory regions */
 };
 
+extern struct memblock memblock;
+
+void __next_free_memblock_region(u64 *index,
+		struct memblock_type *type_in, /* include memblock type */
+		struct memblock_type *type_ex, /* exclude mmeblock type */
+		phys_addr_t *out_start,
+		phys_addr_t *out_end);
+
 #define for_each_memblock_region(i, type, region)	\
 	for (i = 0, region = &(type)->regions[0];	\
 	     i < (type)->index;				\
@@ -40,3 +48,4 @@ struct memblock {
 		&memblock.memory, &memblock.reserved, p_start, p_end))
 
 #endif /* __MEMBLOCK_H */
+

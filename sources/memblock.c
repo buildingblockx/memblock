@@ -3,7 +3,7 @@
 static struct memblock_region memblock_memory_init_regions[INIT_MEMBLOCK_MEMORY_REGIONS];
 static struct memblock_region memblock_reserved_init_regions[INIT_MEMBLOCK_RESERVED_REGIONS];
 
-static struct memblock memblock = {
+struct memblock memblock = {
 	.memory.regions		= memblock_memory_init_regions,
 	.memory.index		= 0,
 	.memory.max		= INIT_MEMBLOCK_MEMORY_REGIONS,
@@ -186,7 +186,7 @@ int memblock_add(phys_addr_t base, phys_addr_t size)
 /*
  * add reserve memory region [@base, @base + @size) to memblock.reserved
  */
-int memblock_add_reserve(phys_addr_t base, phys_addr_t size)
+static int memblock_add_reserve(phys_addr_t base, phys_addr_t size)
 {
 	pr_debug("%s: reserved range: [0x%lx-0x%lx)\n",
 			__func__, base, base + size);
@@ -321,7 +321,7 @@ int memblock_remove(phys_addr_t base, phys_addr_t size)
 /*
  * remove reserve memory region [@base, @base + @size) from memblock.reserved
  */
-int memblock_remove_reserve(phys_addr_t base, phys_addr_t size)
+static int memblock_remove_reserve(phys_addr_t base, phys_addr_t size)
 {
 	pr_debug("%s: reserved range: [0x%lx-0x%lx)\n",
 			__func__, base, base + size);
@@ -333,7 +333,7 @@ int memblock_remove_reserve(phys_addr_t base, phys_addr_t size)
  * Find the first region in between (@type_in, !@type_ex) from @*index,
  * fill the out parameters, and update *@index for the next iteration.
  */
-static void __next_free_memblock_region(u64 *index,
+void __next_free_memblock_region(u64 *index,
 		struct memblock_type *type_in, /* include memblock type */
 		struct memblock_type *type_ex, /* exclude mmeblock type */
 		phys_addr_t *out_start,
@@ -513,3 +513,4 @@ void memblock_print_all_region(void)
 		pr_debug("\t[0x%lx-0x%lx)\n", start, end);
 	}
 }
+
