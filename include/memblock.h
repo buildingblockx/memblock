@@ -29,6 +29,10 @@ struct memblock {
 
 extern struct memblock memblock;
 
+int memblock_isolate_range(struct memblock_type *type,
+			phys_addr_t base, phys_addr_t size,
+			int *start_region, int *end_region);
+
 void __next_free_memblock_region(u64 *index,
 		struct memblock_type *type_in, /* include memblock type */
 		struct memblock_type *type_ex, /* exclude mmeblock type */
@@ -46,6 +50,13 @@ void __next_free_memblock_region(u64 *index,
 	     i != (u64)ULLONG_MAX;					\
 	     __next_free_memblock_region(&i,				\
 		&memblock.memory, &memblock.reserved, p_start, p_end))
+
+#define MEMBLOCK_START_OF_DRAM	(memblock.memory.regions[0].base)
+#define MEMBLOCK_END_OF_DRAM	(memblock.memory.regions[0].base + \
+				memblock.memory.total_size)
+
+#define min_pfn	(MEMBLOCK_START_OF_DRAM >> PAGE_SHIFT)
+#define max_pfn	(MEMBLOCK_END_OF_DRAM >> PAGE_SHIFT)
 
 #endif /* __MEMBLOCK_H */
 

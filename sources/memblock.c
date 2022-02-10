@@ -202,9 +202,9 @@ static int memblock_add_reserve(phys_addr_t base, phys_addr_t size)
  * which may create at most two more regions.  The index of the first
  * region inside the range is returned in @start_region and end in @end_region.
  */
-static int memblock_isolate_range(struct memblock_type *type,
-				phys_addr_t base, phys_addr_t size,
-				int *start_region, int *end_region)
+int memblock_isolate_range(struct memblock_type *type,
+			phys_addr_t base, phys_addr_t size,
+			int *start_region, int *end_region)
 {
 	phys_addr_t end = base + memblock_resize(base, &size);
 	struct memblock_region *region;
