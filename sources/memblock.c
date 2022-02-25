@@ -1,4 +1,9 @@
 #include <memblock.h>
+#include <memory/memory_model.h>
+#include <clamp.h>
+#include <round.h>
+#include <print.h>
+#include <string.h>
 
 static struct memblock_region memblock_memory_init_regions[INIT_MEMBLOCK_MEMORY_REGIONS];
 static struct memblock_region memblock_reserved_init_regions[INIT_MEMBLOCK_RESERVED_REGIONS];
@@ -16,14 +21,6 @@ struct memblock memblock = {
 
 	.limit			= PHYS_ADDR_MAX,
 };
-
-/**
- * initialize memblock allocator
- */
-void memblock_init(void)
-{
-
-}
 
 static inline phys_addr_t memblock_resize(phys_addr_t base, phys_addr_t *size)
 {
@@ -333,7 +330,7 @@ static int memblock_remove_reserve(phys_addr_t base, phys_addr_t size)
  * Find the first region in between (@type_in, !@type_ex) from @*index,
  * fill the out parameters, and update *@index for the next iteration.
  */
-void __next_free_memblock_region(u64 *index,
+void __next_free_memblock_region(uint64_t *index,
 		struct memblock_type *type_in, /* include memblock type */
 		struct memblock_type *type_ex, /* exclude mmeblock type */
 		phys_addr_t *out_start,
@@ -361,7 +358,7 @@ void __next_free_memblock_region(u64 *index,
 				*out_end = end_in;
 
 			index_in++;
-			*index = (u32)index_in | (u64)index_ex << 32;
+			*index = (uint32_t)index_in | (uint64_t)index_ex << 32;
 			return;
 		}
 
@@ -406,7 +403,7 @@ void __next_free_memblock_region(u64 *index,
 				else
 					index_ex++;
 
-				*index = (u32)index_in | (u64)index_ex << 32;
+				*index = (uint32_t)index_in | (uint64_t)index_ex << 32;
 				return;
 			}
 		}
@@ -420,7 +417,7 @@ static phys_addr_t memblock_find_bottom_up(phys_addr_t start,
 		phys_addr_t end, phys_addr_t size, phys_addr_t align)
 {
 	phys_addr_t this_start, this_end, addr;
-	u64 i;
+	uint64_t i;
 
 	for_each_free_memblock_region(i, &this_start, &this_end) {
 		this_start = clamp(this_start, start, end);
@@ -489,13 +486,21 @@ int memblock_free(phys_addr_t base, phys_addr_t size)
 }
 
 /**
+ * initialize memblock allocator
+ */
+void memblock_init(void)
+{
+
+}
+
+/**
  * print all region, include memblock.memory and memblock.reserved
  */
 void memblock_print_all_region(void)
 {
 	struct memblock_region *region;
 	phys_addr_t start, end;
-	u64 i;
+	uint64_t i;
 
 	pr_debug("%s\n", __func__);
 
@@ -513,4 +518,3 @@ void memblock_print_all_region(void)
 		pr_debug("\t[0x%lx-0x%lx)\n", start, end);
 	}
 }
-

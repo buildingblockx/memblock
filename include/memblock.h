@@ -1,7 +1,8 @@
 #ifndef __MEMBLOCK_H
 #define __MEMBLOCK_H
 
-#include <memory/allocator/memblock.h>
+#include <types.h>
+#include <limits.h>
 
 #define INIT_MEMBLOCK_MEMORY_REGIONS	128
 #define INIT_MEMBLOCK_RESERVED_REGIONS	INIT_MEMBLOCK_MEMORY_REGIONS
@@ -33,7 +34,7 @@ int memblock_isolate_range(struct memblock_type *type,
 			phys_addr_t base, phys_addr_t size,
 			int *start_region, int *end_region);
 
-void __next_free_memblock_region(u64 *index,
+void __next_free_memblock_region(uint64_t *index,
 		struct memblock_type *type_in, /* include memblock type */
 		struct memblock_type *type_ex, /* exclude mmeblock type */
 		phys_addr_t *out_start,
@@ -47,7 +48,7 @@ void __next_free_memblock_region(u64 *index,
 #define for_each_free_memblock_region(i, p_start, p_end)		\
 	for (i = 0, __next_free_memblock_region(&i,			\
 		&memblock.memory, &memblock.reserved, p_start, p_end);	\
-	     i != (u64)ULLONG_MAX;					\
+	     i != (uint64_t)ULLONG_MAX;					\
 	     __next_free_memblock_region(&i,				\
 		&memblock.memory, &memblock.reserved, p_start, p_end))
 
@@ -59,4 +60,3 @@ void __next_free_memblock_region(u64 *index,
 #define max_pfn	(MEMBLOCK_END_OF_DRAM >> PAGE_SHIFT)
 
 #endif /* __MEMBLOCK_H */
-
